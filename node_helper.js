@@ -165,7 +165,7 @@ module.exports = NodeHelper.create({
       let dep = depatureBoard.results[i];
       if (stop.lines.length === 0) {
         let line = {
-          direction: dep.serviceJourney.direction,
+          direction: dep.serviceJourney.directionDetails.shortDirection,
           line: dep.serviceJourney.line.shortName,
           departureIn: diffInMin(dep.estimatedTime, stop.now),
           color: dep.serviceJourney.line.foregroundColor,
@@ -197,7 +197,7 @@ module.exports = NodeHelper.create({
           stop.lines[index] = line;
         } else {
           let line = {
-            direction: dep.serviceJourney.direction,
+            direction: dep.serviceJourney.directionDetails.shortDirection,
             line: dep.serviceJourney.line.shortName,
             departureIn: diffInMin(dep.estimatedTime, stop.now),
             color: dep.serviceJourney.line.foregroundColor,

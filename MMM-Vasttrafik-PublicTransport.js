@@ -75,33 +75,35 @@ Module.register("MMM-Vasttrafik-PublicTransport", {
     if (this.stops) {
       for (let i = 0; i < this.stops.length; i++) {
         let stop = this.stops[i];
-        if (this.config.showStopHeader) {
-          let header = document.createElement("div");
-          header.innerHTML = " <b>" + stop.name + "</b>";
-          header.className = "light small";
-          wrapper.appendChild(header);
-        }
-        //Situations
-        if (this.config.trafficSituations) {
-          let trafficSituationContainer = document.createElement("div");
-          trafficSituationContainer.id =
-            "departure-traffic-situation-container-" + stop.stopId;
-          if (this.config.trafficSituations && this.trafficSituationsLoaded) {
-            let situtation = this.trafficSituations.find((obj) => {
-              return obj.stopId === stop.stopId;
-            });
-            if (situtation && situtation.trafficSituations) {
-              trafficSituationContainer.innerHTML = this.generateTrafficSituations(
-                situtation.trafficSituations
-              );
-            }
+        if (stop.lines.length) {
+          if (this.config.showStopHeader) {
+            let header = document.createElement("div");
+            header.innerHTML = " <b>" + stop.name + "</b>";
+            header.className = "light small";
+            wrapper.appendChild(header);
           }
-          wrapper.appendChild(trafficSituationContainer);
+          //Situations
+          if (this.config.trafficSituations) {
+            let trafficSituationContainer = document.createElement("div");
+            trafficSituationContainer.id =
+              "departure-traffic-situation-container-" + stop.stopId;
+            if (this.config.trafficSituations && this.trafficSituationsLoaded) {
+              let situtation = this.trafficSituations.find((obj) => {
+                return obj.stopId === stop.stopId;
+              });
+              if (situtation && situtation.trafficSituations) {
+                trafficSituationContainer.innerHTML = this.generateTrafficSituations(
+                  situtation.trafficSituations
+                );
+              }
+            }
+            wrapper.appendChild(trafficSituationContainer);
+          }
+          let tableContainer = document.createElement("div");
+          tableContainer.id = "departure-table-container-" + stop.stopId;
+          tableContainer.innerHTML = this.generateDepartureTable(stop);
+          wrapper.appendChild(tableContainer);
         }
-        let tableContainer = document.createElement("div");
-        tableContainer.id = "departure-table-container-" + stop.stopId;
-        tableContainer.innerHTML = this.generateDepartureTable(stop);
-        wrapper.appendChild(tableContainer);
       }
       this.depratureTablesLoaded = true;
       return wrapper;

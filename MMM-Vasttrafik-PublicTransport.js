@@ -63,8 +63,7 @@ Module.register("MMM-Vasttrafik-PublicTransport", {
     let wrapper = document.createElement("div");
     wrapper.className = "departure-board";
     if (!this.loaded && !this.failure) {
-      wrapper.innerHTML =
-        "<img src='http://seekvectorlogo.com/wp-content/uploads/2018/07/vasttrafik-ab-vector-logo-small.png'></img>";
+      wrapper.innerHTML = "<img src='https://www.vasttrafik.se/logos/vt-logo-negative.svg' style='width:100%;height:100%;'></img>";
       return wrapper;
     }
     if (this.failure) {
@@ -75,33 +74,35 @@ Module.register("MMM-Vasttrafik-PublicTransport", {
     if (this.stops) {
       for (let i = 0; i < this.stops.length; i++) {
         let stop = this.stops[i];
-        if (this.config.showStopHeader) {
-          let header = document.createElement("div");
-          header.innerHTML = " <b>" + stop.name + "</b>";
-          header.className = "light small";
-          wrapper.appendChild(header);
-        }
-        //Situations
-        if (this.config.trafficSituations) {
-          let trafficSituationContainer = document.createElement("div");
-          trafficSituationContainer.id =
-            "departure-traffic-situation-container-" + stop.stopId;
-          if (this.config.trafficSituations && this.trafficSituationsLoaded) {
-            let situtation = this.trafficSituations.find((obj) => {
-              return obj.stopId === stop.stopId;
-            });
-            if (situtation && situtation.trafficSituations) {
-              trafficSituationContainer.innerHTML = this.generateTrafficSituations(
-                situtation.trafficSituations
-              );
-            }
+        if (stop.lines.length) {
+          if (this.config.showStopHeader) {
+            let header = document.createElement("div");
+            header.innerHTML = " <b>" + stop.name + "</b>";
+            header.className = "light small";
+            wrapper.appendChild(header);
           }
-          wrapper.appendChild(trafficSituationContainer);
+          //Situations
+          if (this.config.trafficSituations) {
+            let trafficSituationContainer = document.createElement("div");
+            trafficSituationContainer.id =
+              "departure-traffic-situation-container-" + stop.stopId;
+            if (this.config.trafficSituations && this.trafficSituationsLoaded) {
+              let situtation = this.trafficSituations.find((obj) => {
+                return obj.stopId === stop.stopId;
+              });
+              if (situtation && situtation.trafficSituations) {
+                trafficSituationContainer.innerHTML = this.generateTrafficSituations(
+                  situtation.trafficSituations
+                );
+              }
+            }
+            wrapper.appendChild(trafficSituationContainer);
+          }
+          let tableContainer = document.createElement("div");
+          tableContainer.id = "departure-table-container-" + stop.stopId;
+          tableContainer.innerHTML = this.generateDepartureTable(stop);
+          wrapper.appendChild(tableContainer);
         }
-        let tableContainer = document.createElement("div");
-        tableContainer.id = "departure-table-container-" + stop.stopId;
-        tableContainer.innerHTML = this.generateDepartureTable(stop);
-        wrapper.appendChild(tableContainer);
       }
       this.depratureTablesLoaded = true;
       return wrapper;
